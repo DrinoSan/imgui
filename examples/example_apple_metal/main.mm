@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for OSX + Metal.
+// Dear ImGui: standalone example application for OSX + Metal-CPP.
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
@@ -45,7 +45,7 @@
 
     if (!self.device)
     {
-        NSLog(@"Metal is not supported");
+        NSLog(@"Metal-CPP is not supported");
         abort();
     }
 

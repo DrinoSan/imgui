@@ -1,5 +1,5 @@
-// Dear ImGui: standalone example application for SDL2 + Metal
-// (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
+// Dear ImGui: standalone example application for SDL2 + Metal-CPP
+// (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal-CPP graphics context creation, etc.)
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
@@ -63,7 +63,7 @@ int main(int, char**)
     // Inform SDL that we will be using metal for rendering. Without this hint initialization of metal renderer may fail.
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
 
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL+Metal example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL+Metal-CPP example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     if (window == NULL)
     {
         printf("Error creating window: %s\n", SDL_GetError());

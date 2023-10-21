@@ -1,4 +1,4 @@
-// dear imgui: Renderer Backend for Metal
+// dear imgui: Renderer Backend for Metal-CPP
 // This needs to be used along with a Platform Backend (e.g. OSX)
 
 // Implemented features:
@@ -13,23 +13,23 @@
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
-//  2023-XX-XX: Metal: Added support for multiple windows via the ImGuiPlatformIO interface.
-//  2022-08-23: Metal: Update deprecated property 'sampleCount'->'rasterSampleCount'.
-//  2022-07-05: Metal: Add dispatch synchronization.
-//  2022-06-30: Metal: Use __bridge for ARC based systems.
-//  2022-06-01: Metal: Fixed null dereference on exit inside command buffer completion handler.
+//  2023-XX-XX: Metal-CPP: Added support for multiple windows via the ImGuiPlatformIO interface.
+//  2022-08-23: Metal-CPP: Update deprecated property 'sampleCount'->'rasterSampleCount'.
+//  2022-07-05: Metal-CPP: Add dispatch synchronization.
+//  2022-06-30: Metal-CPP: Use __bridge for ARC based systems.
+//  2022-06-01: Metal-CPP: Fixed null dereference on exit inside command buffer completion handler.
 //  2022-04-27: Misc: Store backend data in a per-context struct, allowing to use this backend with multiple contexts.
-//  2022-01-03: Metal: Ignore ImDrawCmd where ElemCount == 0 (very rare but can technically be manufactured by user code).
-//  2021-12-30: Metal: Added Metal C++ support. Enable with '#define IMGUI_IMPL_METAL_CPP' in your imconfig.h file.
-//  2021-08-24: Metal: Fixed a crash when clipping rect larger than framebuffer is submitted. (#4464)
-//  2021-05-19: Metal: Replaced direct access to ImDrawCmd::TextureId with a call to ImDrawCmd::GetTexID(). (will become a requirement)
-//  2021-02-18: Metal: Change blending equation to preserve alpha in output buffer.
-//  2021-01-25: Metal: Fixed texture storage mode when building on Mac Catalyst.
-//  2019-05-29: Metal: Added support for large mesh (64K+ vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag.
-//  2019-04-30: Metal: Added support for special ImDrawCallback_ResetRenderState callback to reset render state.
-//  2019-02-11: Metal: Projecting clipping rectangles correctly using draw_data->FramebufferScale to allow multi-viewports for retina display.
+//  2022-01-03: Metal-CPP: Ignore ImDrawCmd where ElemCount == 0 (very rare but can technically be manufactured by user code).
+//  2021-12-30: Metal-CPP: Added Metal-CPP C++ support. Enable with '#define IMGUI_IMPL_METAL_CPP' in your imconfig.h file.
+//  2021-08-24: Metal-CPP: Fixed a crash when clipping rect larger than framebuffer is submitted. (#4464)
+//  2021-05-19: Metal-CPP: Replaced direct access to ImDrawCmd::TextureId with a call to ImDrawCmd::GetTexID(). (will become a requirement)
+//  2021-02-18: Metal-CPP: Change blending equation to preserve alpha in output buffer.
+//  2021-01-25: Metal-CPP: Fixed texture storage mode when building on Mac Catalyst.
+//  2019-05-29: Metal-CPP: Added support for large mesh (64K+ vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag.
+//  2019-04-30: Metal-CPP: Added support for special ImDrawCallback_ResetRenderState callback to reset render state.
+//  2019-02-11: Metal-CPP: Projecting clipping rectangles correctly using draw_data->FramebufferScale to allow multi-viewports for retina display.
 //  2018-11-30: Misc: Setting up io.BackendRendererName so it can be displayed in the About Window.
-//  2018-07-05: Metal: Added new Metal backend implementation.
+//  2018-07-05: Metal-CPP: Added new Metal-CPP backend implementation.
 
 #include "imgui.h"
 #include "imgui_impl_metal.h"
@@ -61,7 +61,7 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows();
 - (instancetype)initWithRenderPassDescriptor:(MTLRenderPassDescriptor*)renderPassDescriptor;
 @end
 
-// A singleton that stores long-lived objects that are needed by the Metal
+// A singleton that stores long-lived objects that are needed by the Metal-CPP
 // renderer backend. Stores the render pipeline state cache and the default
 // font texture, and manages the reusable buffer cache.
 @interface MetalContext : NSObject
@@ -91,7 +91,7 @@ static inline CFTimeInterval    GetMachAbsoluteTimeInSeconds()      { return (CF
 
 #ifdef IMGUI_IMPL_METAL_CPP
 
-#pragma mark - Dear ImGui Metal C++ Backend API
+#pragma mark - Dear ImGui Metal-CPP C++ Backend API
 
 bool ImGui_ImplMetal_Init(MTL::Device* device)
 {
@@ -155,7 +155,7 @@ void ImGui_ImplMetal_Shutdown()
 void ImGui_ImplMetal_NewFrame(MTLRenderPassDescriptor* renderPassDescriptor)
 {
     ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
-    IM_ASSERT(bd->SharedMetalContext != nil && "No Metal context. Did you call ImGui_ImplMetal_Init() ?");
+    IM_ASSERT(bd->SharedMetalContext != nil && "No Metal-CPP context. Did you call ImGui_ImplMetal_Init() ?");
     bd->SharedMetalContext.framebufferDescriptor = [[FramebufferDescriptor alloc] initWithRenderPassDescriptor:renderPassDescriptor];
 
     if (bd->SharedMetalContext.depthStencilState == nil)
@@ -206,7 +206,7 @@ static void ImGui_ImplMetal_SetupRenderState(ImDrawData* drawData, id<MTLCommand
     [commandEncoder setVertexBufferOffset:vertexBufferOffset atIndex:0];
 }
 
-// Metal Render function.
+// Metal-CPP Render function.
 void ImGui_ImplMetal_RenderDrawData(ImDrawData* drawData, id<MTLCommandBuffer> commandBuffer, id<MTLRenderCommandEncoder> commandEncoder)
 {
     ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
@@ -463,7 +463,7 @@ static void ImGui_ImplMetal_RenderWindow(ImGuiViewport* viewport, void*)
     if ((window.occlusionState & NSWindowOcclusionStateVisible) == 0 && !data->FirstFrame)
     {
         // Do not render windows which are completely occluded. Calling -[CAMetalLayer nextDrawable] will hang for
-        // approximately 1 second if the Metal layer is completely occluded.
+        // approximately 1 second if the Metal-CPP layer is completely occluded.
         return;
     }
     data->FirstFrame = false;
@@ -682,7 +682,7 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
     id<MTLLibrary> library = [device newLibraryWithSource:shaderSource options:nil error:&error];
     if (library == nil)
     {
-        NSLog(@"Error: failed to create Metal library: %@", error);
+        NSLog(@"Error: failed to create Metal-CPP library: %@", error);
         return nil;
     }
 
@@ -691,7 +691,7 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
 
     if (vertexFunction == nil || fragmentFunction == nil)
     {
-        NSLog(@"Error: failed to find Metal shader functions in library: %@", error);
+        NSLog(@"Error: failed to find Metal-CPP shader functions in library: %@", error);
         return nil;
     }
 
@@ -727,7 +727,7 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
 
     id<MTLRenderPipelineState> renderPipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDescriptor error:&error];
     if (error != nil)
-        NSLog(@"Error: failed to create Metal pipeline state: %@", error);
+        NSLog(@"Error: failed to create Metal-CPP pipeline state: %@", error);
 
     return renderPipelineState;
 }

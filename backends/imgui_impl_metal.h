@@ -1,4 +1,4 @@
-// dear imgui: Renderer Backend for Metal
+// dear imgui: Renderer Backend for Metal-CPP
 // This needs to be used along with a Platform Backend (e.g. OSX)
 
 // Implemented features:
@@ -41,11 +41,11 @@ IMGUI_IMPL_API void ImGui_ImplMetal_DestroyDeviceObjects();
 // C++ API
 //-----------------------------------------------------------------------------
 
-// Enable Metal C++ binding support with '#define IMGUI_IMPL_METAL_CPP' in your imconfig.h file
-// More info about using Metal from C++: https://developer.apple.com/metal/cpp/
+// Enable Metal-CPP C++ binding support with '#define IMGUI_IMPL_METAL_CPP' in your imconfig.h file
+// More info about using Metal-CPP from C++: https://developer.apple.com/metal/cpp/
 
 #ifdef IMGUI_IMPL_METAL_CPP
-#include <Metal/Metal.hpp>
+#include <Metal-CPP/Metal-CPP.hpp>
 #ifndef __OBJC__
 
 IMGUI_IMPL_API bool ImGui_ImplMetal_Init(MTL::Device* device);
